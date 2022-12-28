@@ -1,0 +1,42 @@
+{
+  "name": "auth",
+  "version": "1.0.0",
+  "description": "Server for Authentication and Authorization",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint . --ext .ts",
+    "build": "rimraf ./dist && tsc -p tsconfig.prod.json && tsc-alias",
+    "dev": "nodemon -e ts,js --exec ts-node -r tsconfig-paths/register ./src/index.ts",
+    "start": "node dist/index.js",
+    "generate": "prisma generate",
+    "migration": "prisma migrate dev",
+    "seed": "ts-node prisma/seed.ts",
+    "test": "NOLOG=true jest",
+    "test:coverage": "NOLOG=true jest --coverage --collectCoverageFrom '**/*.ts'"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.15",
+    "@types/jest": "^29.2.4",
+    "@typescript-eslint/eslint-plugin": "^5.47.1",
+    "@typescript-eslint/parser": "^5.47.1",
+    "eslint": "^8.30.0",
+    "jest": "^29.3.1",
+    "nodemon": "^2.0.20",
+    "prisma": "^4.8.0",
+    "ts-node": "^10.9.1",
+    "tsc-alias": "^1.8.2",
+    "tsconfig-paths": "^4.1.1",
+    "tsconfig-paths-jest": "^0.0.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.8.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "pino": "^8.8.0",
+    "pino-pretty": "^9.1.1"
+  }
+}
