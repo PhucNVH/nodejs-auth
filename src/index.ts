@@ -1,5 +1,5 @@
-import main from 'main'
+import main from 'main';
 
-import { logger } from '@/utils/logger'
+import { logger } from '@/utils/logger';
 
-main().catch((err) => logger.error(err))
+main().catch((err) => logger.error(err));
