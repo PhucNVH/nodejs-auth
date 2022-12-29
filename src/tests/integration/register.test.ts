@@ -1,16 +1,17 @@
 import faker from 'faker'
 import httpStatus from 'http-status'
-import { prisma } from '@/db'
-import main from '@/main'
+import { prisma } from '@/stores'
+import app from '@/index'
 import request from 'supertest'
-import { insertUsers } from '../fixtures/user.fixture'
+import { insertUsers } from '@/tests/fixtures/user.fixture'
 
-describe('POST /api/auth/register', () => {
+describe('POST /api/v1/auth/register', () => {
 	let newUser
 	beforeEach(() => {
 		newUser = {
-			username: faker.name.findName(),
+			username: 'user01',
 			password: 'password1',
+			fullName: faker.name.findName()
 		}
 	})
 
@@ -25,7 +26,7 @@ describe('POST /api/auth/register', () => {
 	})
 
 	test('should return 201 and successfully register user if request data is ok', async () => {
-		const res = await request(main).post('/api/auth/register').send(newUser).expect(httpStatus.CREATED)
+		const res = await request(app).post('/api/v1/auth/register').send(newUser).expect(httpStatus.CREATED)
   
 		expect(res.body).not.toHaveProperty('password')
 		expect(res.body).toEqual({
@@ -45,6 +46,6 @@ describe('POST /api/auth/register', () => {
 	test('should return 400 error if username is already used', async () => {
 		await insertUsers([newUser])
   
-		await request(main).post('/api/auth/register').send(newUser).expect(httpStatus.BAD_REQUEST)
+		await request(app).post('/api/v1/auth/register').send(newUser).expect(httpStatus.BAD_REQUEST)
 	})
 })
