@@ -1,0 +1,35 @@
+version: '1'
+
+services:
+  code-academy-authentication:
+    build: .
+    image: code-academy-authentication
+    environment:
+      - DATABASE_URL=postgresql://postgres_user:postgres_password@db:5432/postgres_database?schema=public
+    ports:
+      - '4000:4000'
+    depends_on:
+      - db
+    volumes:
+      - .:/usr/src/code-academy-authentication
+    networks:
+      - node-network
+
+  db:
+    image: postgres:12.13-alpine3.17
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: postgres_database
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_password
+    volumes:
+      - dbdata:/data/db
+
+volumes:
+  dbdata:
+
+networks:
+  node-network:
+    driver: bridge
