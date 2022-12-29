@@ -31,12 +31,13 @@ describe('POST /api/v1/auth/register', () => {
 		expect(res.body).not.toHaveProperty('password')
 		expect(res.body).toEqual({
 			id: expect.anything(),
-			username: newUser.username
+			username: newUser.username,
+			fullName: newUser.fullName
 		})
   
 		const dbUser = await prisma.user.findUnique({
 			where: {
-				id: res.body.user.id
+				id: res.body.id
 			}
 		})
 		expect(dbUser).toBeDefined()

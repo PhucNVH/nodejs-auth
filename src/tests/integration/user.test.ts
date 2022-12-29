@@ -29,9 +29,9 @@ describe('POST /api/v1/auth/users', () => {
 	test('should return 200 if token is valid', async () => {
 		await insertUsers([newUser])
 
-		const expires = moment().add(process.env.JWT_REFRESH_EXPIRATION_DAYS, 'days')
+		const expires = moment().add(process.env.JWT_ACCESS_EXPIRATION_MINUTES, 'minutes')
 		const accessToken = createToken(newUser.username, expires)
-		const res = await request(app).get('/api/v1/auth/users').set({Authorization: 'Bearer ' + accessToken}).expect(httpStatus.OK)
+		const res = await request(app).get('/api/v1/users').set({Authorization: 'Bearer ' + accessToken}).expect(httpStatus.OK)
   
 		expect(res.body).toEqual({
 			id: expect.anything(),
@@ -43,22 +43,22 @@ describe('POST /api/v1/auth/users', () => {
 	test('should return 401 if token is created by invalid secret', async () => {
 		await insertUsers([newUser])
 
-		const expires = moment().add(process.env.JWT_REFRESH_EXPIRATION_DAYS, 'days')
+		const expires = moment().add(process.env.JWT_ACCESS_EXPIRATION_MINUTES, 'minutes')
 		const accessToken = createToken(newUser.username, expires, 'invalidSecret')
-		await request(app).get('/api/v1/auth/users').set({Authorization: 'Bearer ' + accessToken}).expect(httpStatus.UNAUTHORIZED)
+		await request(app).get('/api/v1/users').set({Authorization: 'Bearer ' + accessToken}).expect(httpStatus.UNAUTHORIZED)
 	})
 
 	test('should return 401 if token is expired', async () => {
 		await insertUsers([newUser])
 
-		const expires = moment().subtract(process.env.JWT_REFRESH_EXPIRATION_DAYS, 'days')
+		const expires = moment().subtract(process.env.JWT_ACCESS_EXPIRATION_MINUTES, 'minutes')
 		const accessToken = createToken(newUser.username, expires)
-		await request(app).get('/api/v1/auth/users').set({Authorization: 'Bearer ' + accessToken}).expect(httpStatus.UNAUTHORIZED)
+		await request(app).get('/api/v1/users').set({Authorization: 'Bearer ' + accessToken}).expect(httpStatus.UNAUTHORIZED)
 	})
 
 	test('should return 401 if user not found', async () => {
-		const expires = moment().subtract(process.env.JWT_REFRESH_EXPIRATION_DAYS, 'days')
+		const expires = moment().subtract(process.env.JWT_ACCESS_EXPIRATION_MINUTES, 'minutes')
 		const accessToken = createToken(newUser.username, expires)
-		await request(app).get('/api/v1/auth/users').set({Authorization: 'Bearer ' + accessToken}).expect(httpStatus.UNAUTHORIZED)
+		await request(app).get('/api/v1/users').set({Authorization: 'Bearer ' + accessToken}).expect(httpStatus.UNAUTHORIZED)
 	})
 })

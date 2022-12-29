@@ -17,4 +17,10 @@ const login = {
 	}),
 }
 
-export { register, login }
+const refresh = {
+	body: Joi.object().keys({
+		refresh: Joi.string().required()
+	})
+}
+
+export { register, login, refresh }

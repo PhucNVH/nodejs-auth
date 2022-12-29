@@ -9,13 +9,13 @@ const hashedPassword = sha256(process.env.PEPPER + sha256(salt + password))
 
 const insertUsers = async (users) => {
 	await prisma.user.createMany({
-		data: users.map((user) => ({ ...user, password: hashedPassword }))
+		data: users.map((user) => ({ ...user, password: hashedPassword, salt: salt }))
 	})
 }
 
-const createToken = (username: string, exprires: Moment, secret = process.env.JWT_PRIVATEKEY) => {
+const createToken = (username: string, expires: Moment, secret = process.env.JWT_SECRET) => {
 	return jwt.sign(
-		{ user: username, exp: exprires.unix(), iat: moment().unix() },
+		{ user: username, exp: expires.unix(), iat: moment().unix() },
 		secret
 	)
 }

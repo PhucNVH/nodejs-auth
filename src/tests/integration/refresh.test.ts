@@ -50,16 +50,16 @@ describe('POST /api/v1/auth/refresh', () => {
 	test('should return 401 error if refresh token is signed using an invalid secret', async () => {
 		await insertUsers([newUser])
 		const expires = moment().add(process.env.JWT_REFRESH_EXPIRATION_DAYS, 'days')
-		const refreshToken = createToken(newUser.username, expires, 'invalidSecret')
+		const refresh = createToken(newUser.username, expires, 'invalidSecret')
   
-		await request(app).post('/api/v1/auth/refresh').send({ refreshToken }).expect(httpStatus.UNAUTHORIZED)
+		await request(app).post('/api/v1/auth/refresh').send({ refresh }).expect(httpStatus.UNAUTHORIZED)
 	})
 
 	test('should return 401 if token is expired', async () => {
 		await insertUsers([newUser])
 
 		const expires = moment().subtract(process.env.JWT_REFRESH_EXPIRATION_DAYS, 'days')
-		const refreshToken = createToken(newUser.username, expires)
-		await request(app).get('/api/v1/auth/users').set({Authorization: 'Bearer ' + refreshToken}).expect(httpStatus.UNAUTHORIZED)
+		const refresh = createToken(newUser.username, expires)
+		await request(app).post('/api/v1/auth/refresh').send({ refresh }).expect(httpStatus.UNAUTHORIZED)
 	})
 })
